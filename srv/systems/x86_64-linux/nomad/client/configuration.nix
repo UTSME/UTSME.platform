@@ -53,7 +53,7 @@
     enable = true;
     settings = {
       PasswordAuthentication = false;
-      PermitRootLogin = "no";
+      PermitRootLogin = "yes";
     };
     extraConfig = ''
       # Automatically remove stale sockets on connect
@@ -62,6 +62,7 @@
       # Send timeout message every 60 s to request answer from clients
       ClientAliveInterval 60
     '';
+    ports = [ 22 ];
   };
 
   services.nomad = {
@@ -75,10 +76,7 @@
     settings = {
       datacenter = "datacenter-1";
       client.enabled = true;
-      server = {
-        enabled = true;
-        bootstrap_expect = 1;
-      };
+      server = { enabled = false; };
       plugin = [{ nomad-driver-podman = { config = { enable = true; }; }; }];
       ports = {
         http = 4646;

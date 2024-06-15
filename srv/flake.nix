@@ -27,25 +27,64 @@
     #  url = "github:astro/microvm.nix";
     #  inputs.nixpkgs.follows = "nixpkgs";
     #};
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs,... }@inputs: {
+  outputs = { self, nixpkgs, deploy-rs, ... }@inputs: {
     nixosConfigurations = {
       "nixos2" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        # Pass these stuff as inputs to the configuration files
         specialArgs = {
           inherit (nixpkgs) lib;
           inherit inputs;
         };
         modules = [
-          ./systems/x86_64-linux/nomad/configuration.nix
+          ./systems/x86_64-linux/nomad/server/configuration.nix
           ./systems/core.nix
 
-          ./modules/server/nomad
-          ./modules/server/podman
+          #./modules/server/nomad
+          #./modules/server/podman
         ];
       };
     };
+
+    deploy = {
+      sshOpts = [ "-p" "22" ];
+      sshUser = "root";
+      user = "root";
+      # Auto rollback on deployment failure, recommended off.
+      #
+      # NixOS deployment can be a bit flaky (especially on unstable)
+      # and you may need to deploy twice to succeed, but auto rollback
+      # works against that and make your deployments constantly fail.
+      autoRollback = false;
+
+      # Auto rollback on Internet disconnection, recommended off.
+      #
+      # Rollback when your new config killed the Internet connection,
+      # so you don't have to use VNC or IPMI from your service provider.
+      # But if you're adjusting firewall or IP settings, chances are
+      # although the Internet is down atm, a simple reboot will make everything work.
+      # Magic rollback works against that, so you should keep that off.
+      magicRollback = false;
+      nodes."nixos2" = {
+        hostname = "138.25.249.166";
+        #fastConnection = true;
+        #interactiveSudo = true;
+        profiles = {
+          system = {
+            path = deploy-rs.lib.x86_64-linux.activate.nixos
+              self.nixosConfigurations."nixos2";
+          };
+        };
+      };
+    };
+
+    checks =
+      builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy)
+      deploy-rs.lib;
   };
 }
