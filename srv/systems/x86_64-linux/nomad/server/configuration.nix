@@ -48,7 +48,22 @@
     defaultNetwork.settings.dns_enabled = true;
   };
 
-  services.openssh.enable = true;
+  # Enable the OpenSSH daemon.
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      PermitRootLogin = "no";
+    };
+    extraConfig = ''
+      # Automatically remove stale sockets on connect
+      StreamLocalBindUnlink yes
+
+      # Send timeout message every 60 s to request answer from clients
+      ClientAliveInterval 60
+    '';
+  };
+
   services.nomad = {
     enable = false;
     package = pkgs.nomad;
@@ -59,12 +74,11 @@
     # Nomad configuration, as Nix attribute set.
     settings = {
       datacenter = "datacenter-1";
-      client.enabled = true;
+      client.enabled = false;
       server = {
         enabled = true;
         bootstrap_expect = 1;
       };
-      plugin = [{ nomad-driver-podman = { config = { enable = true; }; }; }];
       ports = {
         http = 4646;
         rpc = 4647;
@@ -74,6 +88,5 @@
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  system.stateVersion = "23.11";
 }
 
