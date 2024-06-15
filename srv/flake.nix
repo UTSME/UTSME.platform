@@ -1,4 +1,3 @@
-
 {
   description = "NixOs servers system flake configuration";
 
@@ -31,8 +30,9 @@
 
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, snowfall-lib,  ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, snowfall-lib, ... }@inputs:
     let
     in {
+
     };
 }
