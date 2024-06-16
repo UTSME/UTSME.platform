@@ -2,22 +2,26 @@
 { config, pkgs, inputs, ... }:
 
 {
-
-  # My user in all hosts
-  users.users.h = {
-    uid = 1000;
-    isNormalUser = true;
-    # TODO: systemd-journal is some kind of bug: I shouldn't need to be in it (see man journalctl)
-    extraGroups = [ "wheel" "podman" "systemd-journal" "networkmanager" ];
-    openssh.authorizedKeys.keys = [''
-      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCUfT5gIqMkjblTRc+OEAncVa+b8Qe/S7a1TfZ8bEU2f04VHuvL077jXl
-      AYhna73CoOW35RKiv6taEnLyoE58tA9NJMWDcetaZvEqGJH1LrX942O7jSfayFd1VCqUc/frUkJkh2mk6a6Lys+0fAmbFG
-      cyJX1veELTzfn7dwSoaurW1ZXuNUkTzcMazHPVmrc2psngDVu00DfxFBjHvsUkjBBhzFz9skh9RC5w9rup6pg1uXlhCBtS
-      MA3ME6VEIBHNhGgye8zGgHQdI2zgU++u4Sz/5JmCj9hTg7+xi6p4a8R2iz4OKpOJNrLpjNc06QIe8+diHu/f1SmJSX40yY
-      dDdlufC0ucS4ZVc9T0KFyPLRj4IcUysWBYKvAWHY3r6OtdoxiZyUI2LDJ3WYaKGnx4X1YxfLRLHd5A0lbu3cx+k+MdrN/n
-      kjPl1MDASUBwCibjDwXqXn7T6zkC2zSndmLqaMCcDnaBws7EqMEsEW+jaRXHSRBLpHHjR/WlzXO6E0yr8= moritzzmn@M
-      oritzs-MBP.modem''];
+  users.users = {
+    eugene = {
+      uid = 1000;
+      isNormalUser = true;
+      # TODO: systemd-journal is some kind of bug: I shouldn't need to be in it (see man journalctl)
+      extraGroups = [ "wheel" "podman" "systemd-journal" "networkmanager" ];
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0x3Ae+qrGH3WQpu1uKCcn0Nc9jCDFyMMmKrnan4JLz nguyendinhnhattai.work@gmail.com"
+      ];
+    };
+    root.openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0x3Ae+qrGH3WQpu1uKCcn0Nc9jCDFyMMmKrnan4JLz nguyendinhnhattai.work@gmail.com"
+    ];
   };
+
+  boot.initrd.network.ssh.authorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0x3Ae+qrGH3WQpu1uKCcn0Nc9jCDFyMMmKrnan4JLz nguyendinhnhattai.work@gmail.com"
+  ];
+
+  security.sudo.wheelNeedsPassword = false;
 
   nix = {
     settings = {
@@ -56,4 +60,5 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+  system.stateVersion = "24.05";
 }
