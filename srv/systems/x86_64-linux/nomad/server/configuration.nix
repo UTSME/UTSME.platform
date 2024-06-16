@@ -6,7 +6,8 @@
   networking = {
     dhcpcd.enable = false;
     useDHCP = false;
-    useHostRevolveConf = false;
+    #useHostRevolveConf = false;
+    firewall.allowedTCPPorts = [22];
   };
 
   systemd.network = {
@@ -52,8 +53,8 @@
   services.openssh = {
     enable = true;
     settings = {
-      PasswordAuthentication = false;
-      PermitRootLogin = "no";
+      PasswordAuthentication = true;
+      PermitRootLogin = "yes";
     };
     extraConfig = ''
       # Automatically remove stale sockets on connect

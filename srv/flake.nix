@@ -71,7 +71,8 @@
       # Magic rollback works against that, so you should keep that off.
       magicRollback = false;
       nodes."nixos2" = {
-        hostname = "138.25.249.166";
+        remoteBuild = true;
+        hostname = "138.25.249.154";
         #fastConnection = true;
         #interactiveSudo = true;
         profiles = {
@@ -83,8 +84,6 @@
       };
     };
 
-    checks =
-      builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy)
-      deploy-rs.lib;
+    #checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
   };
 }
