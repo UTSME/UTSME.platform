@@ -1,6 +1,6 @@
 { pkgs, lib, config, ... }: {
   services.nomad = {
-    enable = false;
+    enable = true;
     package = pkgs.nomad;
     enableDocker = false;
     extraSettingsPlugins = with pkgs; [ nomad-driver-podman ];
@@ -11,7 +11,7 @@
       datacenter = "datacenter-1";
       client.enabled = true;
       server = {
-        enabled = true;
+        enabled = false;
         bootstrap_expect = 1;
       };
       plugin = [{ nomad-driver-podman = { config = { enable = true; }; }; }];

@@ -35,14 +35,14 @@
 
   outputs = { self, nixpkgs, deploy-rs, ... }@inputs: {
     nixosConfigurations = {
-      "nixos2" = nixpkgs.lib.nixosSystem {
+      "nixos" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
           inherit (nixpkgs) lib;
           inherit inputs;
         };
         modules = [
-          ./systems/x86_64-linux/nomad/server/configuration.nix
+          ./systems/x86_64-linux/configuration.nix
           ./systems/core.nix
 
           #./modules/server/nomad
@@ -70,15 +70,15 @@
       # although the Internet is down atm, a simple reboot will make everything work.
       # Magic rollback works against that, so you should keep that off.
       magicRollback = false;
-      nodes."nixos2" = {
+      nodes."nixos" = {
         remoteBuild = true;
-        hostname = "138.25.249.154";
-        #fastConnection = true;
-        #interactiveSudo = true;
+        hostname = "138.25.249.136";
+        fastConnection = true;
+        interactiveSudo = true;
         profiles = {
           system = {
             path = deploy-rs.lib.x86_64-linux.activate.nixos
-              self.nixosConfigurations."nixos2";
+              self.nixosConfigurations."nixos";
           };
         };
       };
