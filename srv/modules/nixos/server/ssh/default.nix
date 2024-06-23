@@ -5,7 +5,9 @@
     enable = true;
     settings = {
       PasswordAuthentication = false;
-      PermitRootLogin = "no";
+      KbdInteractiveAuthentication = false;
+      PermitRootLogin =
+        lib.mkForce "prohibit-password"; # enable root login for remote deploy
     };
     extraConfig = ''
       # Automatically remove stale sockets on connect

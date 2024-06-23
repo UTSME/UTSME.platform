@@ -10,6 +10,8 @@ _:
     ./system/packages.nix
   ];
 
+  boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
+
   # set hostname
   networking.hostName = "nixos";
 }

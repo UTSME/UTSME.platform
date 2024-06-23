@@ -37,6 +37,10 @@ This is where I keep the configuration and script to manage Proxmox VM and LXC w
 
 
 
+## NixOS proxmox image build 
+
+Note: I need to figure out how to cross platform compile since my machine is Darwin
+
 
 
 ## References

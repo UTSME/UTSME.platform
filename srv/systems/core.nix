@@ -3,23 +3,28 @@
   users = {
     mutableUsers = false;
     users = {
-      eugene = {
+      deploy = {
         uid = 1000;
         isNormalUser = true;
+        home = "/home/deploy";
+        shell = pkgs.bash;
         extraGroups = [ "wheel" "systemd-journal" "networkmanager" ];
         openssh.authorizedKeys.keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0x3Ae+qrGH3WQpu1uKCcn0Nc9jCDFyMMmKrnan4JLz nguyendinhnhattai.work@gmail.com"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOoRjB5AqGrenuJz8jcW9qeIHgV2uJ8TySp/vpzyLab5 nguyendinhnhattai.work@gmail.com"
         ];
       };
-      root.openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0x3Ae+qrGH3WQpu1uKCcn0Nc9jCDFyMMmKrnan4JLz nguyendinhnhattai.work@gmail.com"
-      ];
+      root = {
+        inherit (config.users.users."deploy") initialHashedPassword;
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOoRjB5AqGrenuJz8jcW9qeIHgV2uJ8TySp/vpzyLab5 nguyendinhnhattai.work@gmail.com"
+        ];
+      };
     };
   };
 
   # Enable passwordless sudo.
   security.sudo.extraRules = [{
-    users = [ "eugene" ];
+    users = [ "deploy" ];
     commands = [{
       command = "ALL";
       options = [ "NOPASSWD" ];

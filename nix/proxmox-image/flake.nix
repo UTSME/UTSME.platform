@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    #pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
@@ -26,7 +26,7 @@
         });
     in {
       # checks
-      checks.${system}.pre-commit-check = genChecks system;
+      #checks.${system}.pre-commit-check = genChecks system;
 
       # See for further options:
       # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/virtualisation/proxmox-image.nix
@@ -41,8 +41,8 @@
               qemuConf = {
                 # EFI support
                 bios = "ovmf";
-                cores = 4;
-                memory = 2048;
+                cores = 2;
+                memory = 1024;
                 net0 = "virtio=00:00:00:00:00:00,bridge=vmbr0,firewall=1";
                 diskSize = "20480"; # 20Gb
               };

@@ -1,10 +1,7 @@
 { pkgs, modulesPath, lib, ... }:
 
 {
-  imports = [
-    ./../../modules/nixos/server/ssh
-    (modulesPath + "/virtualisation/proxmox-lxc.nix")
-  ];
+  imports = [ (modulesPath + "/virtualisation/proxmox-lxc.nix") ];
 
   networking = {
     dhcpcd.enable = false;
@@ -35,6 +32,6 @@
   #  serviceConfig.Restart = "always"; # restart when session is closed
   #};
 
-  environment.systemPackages = with pkgs; [ neovim binutils ];
+  environment.systemPackages = with pkgs; [ neovim binutils openssh];
 }
 
