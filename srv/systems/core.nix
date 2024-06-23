@@ -1,25 +1,35 @@
 # Global configuration for Nix itself.
-{ config, pkgs, inputs, ... }:
-
-{
-  users.users = {
-    eugene = {
-      uid = 1000;
-      isNormalUser = true;
-      # TODO: systemd-journal is some kind of bug: I shouldn't need to be in it (see man journalctl)
-      extraGroups = [ "wheel" "podman" "systemd-journal" "networkmanager" ];
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0x3Ae+qrGH3WQpu1uKCcn0Nc9jCDFyMMmKrnan4JLz nguyendinhnhattai.work@gmail.com"
-      ];
+{ config, pkgs, inputs, ... }: {
+  users = {
+    mutableUsers = false;
+    users = {
+      deploy = {
+        uid = 1000;
+        isNormalUser = true;
+        home = "/home/deploy";
+        shell = pkgs.bash;
+        extraGroups = [ "wheel" "systemd-journal" "networkmanager" ];
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOoRjB5AqGrenuJz8jcW9qeIHgV2uJ8TySp/vpzyLab5 nguyendinhnhattai.work@gmail.com"
+        ];
+      };
+      root = {
+        inherit (config.users.users."deploy") initialHashedPassword;
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOoRjB5AqGrenuJz8jcW9qeIHgV2uJ8TySp/vpzyLab5 nguyendinhnhattai.work@gmail.com"
+        ];
+      };
     };
-    root.openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0x3Ae+qrGH3WQpu1uKCcn0Nc9jCDFyMMmKrnan4JLz nguyendinhnhattai.work@gmail.com"
-    ];
   };
 
-  boot.initrd.network.ssh.authorizedKeys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0x3Ae+qrGH3WQpu1uKCcn0Nc9jCDFyMMmKrnan4JLz nguyendinhnhattai.work@gmail.com"
-  ];
+  # Enable passwordless sudo.
+  security.sudo.extraRules = [{
+    users = [ "deploy" ];
+    commands = [{
+      command = "ALL";
+      options = [ "NOPASSWD" ];
+    }];
+  }];
 
   security.sudo.wheelNeedsPassword = false;
 

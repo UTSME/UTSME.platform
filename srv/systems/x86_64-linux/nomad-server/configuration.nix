@@ -6,7 +6,6 @@
   networking = {
     dhcpcd.enable = false;
     useDHCP = false;
-    useHostRevolveConf = false;
   };
 
   systemd.network = {

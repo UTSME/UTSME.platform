@@ -1,0 +1,9 @@
+deploy-all:
+   nix run github:serokell/deploy-rs .
+
+
+deploy-all-trace:
+   nix run github:serokell/deploy-rs . --show-trace
+
+deploy-nixos2:
+   nix run github:serokell/deploy-rs .#nixos2
