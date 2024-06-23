@@ -5,7 +5,10 @@ on:
     branches: [ "main" ]
     paths:
         - "acls/tailscale-acls.yml"
-
+  pull_request:
+    branches: [ "main" ]
+    paths:
+        - "acls/tailscale-acls.yml"
 jobs:
   acls:
     runs-on: ubuntu-latest
